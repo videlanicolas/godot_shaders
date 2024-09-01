@@ -4,7 +4,6 @@ shader_type canvas_item;
 Color to use for the shock.
 */ 
 uniform vec3 shock_color : source_color = vec3(1.0, 0.0, 0.0);
-
 /** 
 Initial amplitude of the shock. This will start at this amplitude and
 gradually attenuate.
@@ -15,11 +14,6 @@ How fast shold it move side to side, more frequency means it'll move more quickl
 side to side.
 */
 uniform float frequecy = 10.0;
-/** 
-How fast shold it attenuate. Higher values means the shock will cool down
-quicker.
-*/
-uniform float exp_decrease = 1.0;
 
 void vertex() {
 	float exponent = mod(TIME, 3.0);
