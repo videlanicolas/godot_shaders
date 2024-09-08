@@ -15,10 +15,10 @@ uniform float line_thickness : hint_range(0.0, 1.0) = 0.01;
 group_uniforms ScanLinesMovement;
 /** Scan lines speed. */
 uniform float speed : hint_range(0.0, 20.0) = 1.0;
-/** Restrict scan lines going below this number. Texture goes from 0.0 to 1.0. */
-uniform float lower_bound : hint_range(0.0, 1.0) = 0.0; 
-/** Restrict scan lines going above this number. Texture goes from 0.0 to 1.0. */
-uniform float upper_bound :hint_range(0.0, 1.0)  = 1.0;
+/** Restrict scan lines in X and Y to the bounds specified by their vectors.
+Texture goes from 0.0 to 1.0, so the default value does not restrict. */
+uniform vec2 x_line_bounds = vec2(0.0, 1.0); 
+uniform vec2 y_line_bounds = vec2(0.0, 1.0);
 
 float highlight(float point, float progress) {
 	return smoothstep(progress - line_thickness, progress, point) - 
@@ -64,14 +64,14 @@ void fragment() {
 	// Generate a random point between vec2(lower_bound) and vec2(upper_bound). This
 	// will be the start vector from where the scan lines should start.
 	vec2 rand_vector = vec2(
-		mix(lower_bound, upper_bound, random(vec2(floor_time, 0.0))),
-		mix(lower_bound, upper_bound, random(vec2(0.0, floor_time)))
+		mix(x_line_bounds.x, x_line_bounds.y, random(vec2(floor_time, 0.0))),
+		mix(y_line_bounds.x, y_line_bounds.y, random(vec2(0.0, floor_time)))
 	);
 	// Generate the next random point, this will be the end vector to where the
 	// scan lines arrive.
 	vec2 next_rand_vector = vec2(
-		mix(lower_bound, upper_bound, random(vec2(next_floor_time, 0.0))),
-		mix(lower_bound, upper_bound, random(vec2(0.0, next_floor_time)))
+		mix(x_line_bounds.x, x_line_bounds.y, random(vec2(next_floor_time, 0.0))),
+		mix(y_line_bounds.x, y_line_bounds.y, random(vec2(0.0, next_floor_time)))
 	);
 	// Generate the actual point to draw now. This is a simple interpolation between
 	// the start vector and the end vector.
